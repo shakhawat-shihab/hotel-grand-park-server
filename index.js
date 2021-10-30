@@ -22,12 +22,22 @@ async function run() {
         const ordersCollection = database.collection(process.env.COLLECTION_NAME2);
         //post api
         app.post('/addService', async (req, res) => {
-            console.log('new data : ', req.body);
             const newUser = req.body;
-            const result = await servicecCollection.insertOne(newUser);
-            console.log(`Added user at index: ${result.insertedId}`);
-            console.log('Success');
-            res.json(result);
+            const filter = { id: newUser.id };
+            console.log('new data : ', filter);
+            const cursor = servicecCollection.find(filter);
+            const service = await cursor.toArray();
+            console.log(service);
+            //if already have a service with this id, then no entry in DB
+            if (service.length) {
+                res.send('already have this id');
+            }
+            else {
+                const result = await servicecCollection.insertOne(newUser);
+                console.log(`Added user at index: ${result.insertedId}`);
+                console.log('Success', result);
+                res.json(result);
+            }
         })
         //use post to load the data of local storage
         app.post('/service/byId', async (req, res) => {
