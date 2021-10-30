@@ -83,11 +83,16 @@ async function run() {
             const cursor = ordersCollection.find(filter);
             const orders = await cursor.toArray();
             res.send(orders);
-            // const order = req.body;
-            // const result = await ordersCollection.insertOne(order);
-            // console.log('Successfully ordered');
-            // res.json(result);
         })
+        // delete order api
+        app.delete('/deleteOrder/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await usersCollection.deleteOne(query);
+            console.log('deleting user with id ', result);
+            res.json(result);
+        })
+
 
     } finally {
         // the next line is commented, because connection is closing before trigger post
