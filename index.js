@@ -2,7 +2,7 @@ const express = require('express');
 var cors = require('cors');
 const { MongoClient } = require('mongodb');
 require('dotenv').config();
-
+const ObjectId = require('mongodb').ObjectId;
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -87,11 +87,28 @@ async function run() {
         // delete order api
         app.delete('/deleteOrder/:id', async (req, res) => {
             const id = req.params.id;
+            // console.log(id);
             const query = { _id: ObjectId(id) };
-            const result = await usersCollection.deleteOne(query);
+            const result = await ordersCollection.deleteOne(query);
             console.log('deleting user with id ', result);
             res.json(result);
         })
+        // update order api
+        app.put('/updateOrder/:id', async (req, res) => {
+            const id = req.params.id;
+            const data = req.body;
+            console.log('data', data);
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: false };
+            const updateDoc = {
+                $set: {
+                    status: data.status
+                }
+            };
+            const result = await ordersCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        });
+
 
 
     } finally {
