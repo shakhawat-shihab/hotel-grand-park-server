@@ -63,7 +63,7 @@ async function run() {
             res.send(services);
         });
 
-        app.post('/place-order', async (req, res) => {
+        app.post('/placeOrder', async (req, res) => {
             console.log('order : ', req.body);
             const order = req.body;
             const result = await ordersCollection.insertOne(order);
