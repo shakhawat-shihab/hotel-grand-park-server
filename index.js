@@ -39,19 +39,27 @@ async function run() {
             console.log('hitt ', services);
             res.json(services);
         })
-        //get api
+        //get api for rooms
         app.get('/services/rooms', async (req, res) => {
             const filter = { type: "room" };
             const cursor = servicecCollection.find(filter);
             const services = await cursor.toArray();
             res.send(services);
         });
-        //get api
+        //get api for all services
         app.get('/services', async (req, res) => {
             const cursor = servicecCollection.find({});
             const services = await cursor.toArray();
             res.send(services);
         });
+
+        app.post('/place-order', async (req, res) => {
+            console.log('order : ', req.body);
+            const order = req.body;
+            const result = await ordersCollection.insertOne(order);
+            console.log('Successfully ordered');
+            res.json(result);
+        })
 
     } finally {
         // the next line is commented, because connection is closing before trigger post
