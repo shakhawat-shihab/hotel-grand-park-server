@@ -18,14 +18,14 @@ async function run() {
     try {
         await client.connect();
         const database = client.db(process.env.DB_NAME);
-        const servicecCollection = database.collection(process.env.COLLECTION_NAME1);
+        const servicesCollection = database.collection(process.env.COLLECTION_NAME1);
         const ordersCollection = database.collection(process.env.COLLECTION_NAME2);
         //post api
         app.post('/addService', async (req, res) => {
             const newUser = req.body;
             const filter = { id: newUser.id };
             console.log('new data : ', filter);
-            const cursor = servicecCollection.find(filter);
+            const cursor = servicesCollection.find(filter);
             const service = await cursor.toArray();
             console.log(service);
             //if already have a service with this id, then no entry in DB
@@ -33,7 +33,7 @@ async function run() {
                 res.send('already have this id');
             }
             else {
-                const result = await servicecCollection.insertOne(newUser);
+                const result = await servicesCollection.insertOne(newUser);
                 console.log(`Added user at index: ${result.insertedId}`);
                 console.log('Success', result);
                 res.json(result);
@@ -44,7 +44,7 @@ async function run() {
             console.log('the keys of product : ', req.body);
             const serviceIds = req.body;
             const filter = { id: { $in: serviceIds } };
-            const cursor = servicecCollection.find(filter);
+            const cursor = servicesCollection.find(filter);
             const services = await cursor.toArray();
             console.log('hitt ', services);
             res.json(services);
@@ -52,19 +52,19 @@ async function run() {
         //get api for rooms
         app.get('/services/rooms', async (req, res) => {
             const filter = { type: "room" };
-            const cursor = servicecCollection.find(filter);
+            const cursor = servicesCollection.find(filter);
             const services = await cursor.toArray();
             res.send(services);
         });
         //get api for all services
         app.get('/services', async (req, res) => {
-            const cursor = servicecCollection.find({});
+            const cursor = servicesCollection.find({});
             const services = await cursor.toArray();
             res.send(services);
         });
         //get api for all orders
         app.get('/orders', async (req, res) => {
-            const cursor = orderscCollection.find({});
+            const cursor = ordersCollection.find({});
             const orders = await cursor.toArray();
             res.send(orders);
         });
