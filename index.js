@@ -62,13 +62,25 @@ async function run() {
             const services = await cursor.toArray();
             res.send(services);
         });
-
+        //place a order
         app.post('/placeOrder', async (req, res) => {
             console.log('order : ', req.body);
             const order = req.body;
             const result = await ordersCollection.insertOne(order);
             console.log('Successfully ordered');
             res.json(result);
+        })
+        //show my order
+        app.post('/myOrder', async (req, res) => {
+            console.log('order : ', req.body);
+            const filter = req.body;
+            const cursor = ordersCollection.find(filter);
+            const orders = await cursor.toArray();
+            res.send(orders);
+            // const order = req.body;
+            // const result = await ordersCollection.insertOne(order);
+            // console.log('Successfully ordered');
+            // res.json(result);
         })
 
     } finally {
