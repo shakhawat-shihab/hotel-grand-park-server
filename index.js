@@ -20,7 +20,7 @@ async function run() {
         const database = client.db(process.env.DB_NAME);
         const servicesCollection = database.collection(process.env.COLLECTION_NAME1);
         const ordersCollection = database.collection(process.env.COLLECTION_NAME2);
-        //post api
+        //post api to add service
         app.post('/addService', async (req, res) => {
             const newUser = req.body;
             const filter = { id: newUser.id };
@@ -49,7 +49,7 @@ async function run() {
             console.log('hitt ', services);
             res.json(services);
         })
-        //get api for rooms
+        //get api for services having type = rooms
         app.get('/services/rooms', async (req, res) => {
             const filter = { type: "room" };
             const cursor = servicesCollection.find(filter);
@@ -68,7 +68,7 @@ async function run() {
             const orders = await cursor.toArray();
             res.send(orders);
         });
-        //place a order
+        //post api to place a order
         app.post('/placeOrder', async (req, res) => {
             console.log('order : ', req.body);
             const order = req.body;
@@ -76,7 +76,7 @@ async function run() {
             console.log('Successfully ordered');
             res.json(result);
         })
-        //show my order
+        //post api to show my order
         app.post('/myOrder', async (req, res) => {
             console.log('order : ', req.body);
             const filter = req.body;
@@ -84,7 +84,7 @@ async function run() {
             const orders = await cursor.toArray();
             res.send(orders);
         })
-        // delete order api
+        // delete  api to delete an order
         app.delete('/deleteOrder/:id', async (req, res) => {
             const id = req.params.id;
             // console.log(id);
@@ -93,7 +93,7 @@ async function run() {
             console.log('deleting user with id ', result);
             res.json(result);
         })
-        // update order api
+        // update  api to change status of a order
         app.put('/updateOrder/:id', async (req, res) => {
             const id = req.params.id;
             const data = req.body;
